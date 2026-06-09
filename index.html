@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zbcsmade 總部主管週度考核系統 V2</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { 
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            min-height: 100vh;
+        }
+        .card { 
+            background: rgba(255, 255, 255, 0.98); 
+            border-radius: 20px; 
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+        }
+        .section-title { 
+            border-left: 5px solid #1e3a8a; padding-left: 10px; font-weight: 800; color: #1e3a8a;
+        }
+        input, select, textarea {
+            border: 1.5px solid #cbd5e1; border-radius: 10px; padding: 0.6rem; font-size: 14px;
+        }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15); }
+    </style>
+</head>
+<body class="p-4 md:p-8 text-slate-800">
+
+    <div class="max-w-4xl mx-auto">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl font-black text-slate-950 tracking-tight">Zbcsmade 總部核心管理階層週度考核系統</h1>
+            <p class="text-slate-500 font-medium text-sm mt-1">成本與業績雙向校正：流速核算 / 水位控制 / 上週銷量階梯 / 團隊管理連動</p>
+        </header>
+
+        <form id="kpiForm" class="card p-6 md:p-8 space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">考核職位與同仁</label>
+                    <select id="staffRole" onchange="switchRoleView()" class="w-full">
+                        <option value="bang">採購兼倉儲主管 (邦邦)</option>
+                        <option value="pt">總部採購兼職同仁 (PT人員)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">考核評分週別</label>
+                    <select id="weekSelect" class="w-full">
+                        <option value="第一週">第一週</option><option value="第二週">第二週</option>
+                        <option value="第三週">第三週</option><option value="第四週">第四週</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">核心會審日期</label>
+                    <input type="date" id="evalDate" class="w-full">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">審查負責人</label>
+                    <input type="text" value="Rita / 老闆" readonly class="w-full bg-slate-100 font-bold text-slate-700">
+                </div>
+            </div>
+
+            <div id="bangManagerSection" class="space-y-6">
+                <div>
+                    <h2 class="section-title text-base mb-2">一、採購金額、追加流速與商品就位管控 (分數調校為 30分)</h2>
+                    <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-4 text-xs">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="font-bold">1. 追加流速安全比率與商品就位效率評分 (最高 15 分)</label>
+                                <input type="number" id="score_purchasing_speed" min="0" max="15" value="13" class="w-full mt-1">
+                            </div>
+                            <div>
+                                <label class="font-bold">2. 長週期延遲訂單追蹤與催貨控管評分 (最高 15 分)</label>
+                                <input type="number" id="score_delay_control" min="0" max="15" value="13" class="w-full mt-1">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="section-title text-base mb-2">二、線上雙通路庫存水位與成本掌控 (分數調校為 20分)</h2>
+                    <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-4 text-xs">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="font-bold">1. 官網預購可用庫存控貨表現分 (最高 10 分)</label>
+                                <input type="number" id="score_official_stock" min="0" max="10" value="9" class="w-full mt-1">
+                            </div>
+                            <div>
+                                <label class="font-bold">2. 蝦皮現貨 1200 件安全水位控制分 (最高 10 分)</label>
+                                <input type="number" id="score_shopee_stock" min="0" max="10" value="9" class="w-full mt-1">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="section-title text-base mb-2 text-rose-800">三、上週線上通路（官網+蝦皮）銷售件數達標率 (權重 20分)</h2>
+                    <div class="p-4 bg-rose-50/60 rounded-xl border border-rose-200 space-y-4 text-xs">
+                        <div class="p-3 bg-white rounded-lg border border-rose-300 text-rose-950 font-medium">
+                            📈 <b>春夏 Q1-Q2 線上流速標準大綱：</b><br>
+                            每週線上營業額目標設定為 <b>70 萬元</b>（單價約500元），換算正常出貨量標準為 <b>1400 件</b>。<br>
+                            ⚖️ <b>系統自動階梯計分</b>：達標 1400 件給予 <b>15 分</b>；以此為基準，<b>每多 100 件 +1 分</b>（最高20分）；<b>每少 100 件 -1 分</b>（低於900件強制歸為10分以下）。
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="font-bold text-rose-900">📦 請KEY入「上週官網＋蝦皮」實際出貨銷售總件數：</label>
+                                <input type="number" id="last_week_sales_volume" value="1400" min="0" oninput="calculateSalesVolumeScore()" class="w-full mt-1 font-bold border-rose-300 text-rose-700 text-base">
+                            </div>
+                            <div>
+                                <label class="font-bold text-slate-700 block">📊 系統自動階梯流速計分判定結果：</label>
+                                <div class="mt-2 text-base font-black text-rose-700 bg-white p-2 rounded-lg border border-rose-200 text-center">
+                                    實得得分：<span id="salesVolumeScoreDisplay">15.0</span> 分 / 滿分20
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="section-title text-base mb-2">四、倉儲團隊人員管控與下屬績效連動考核 (權重 20分)</h2>
+                    <div class="p-4 bg-blue-50 rounded-xl border border-blue-200 space-y-4 text-xs">
+                        <div class="p-3 bg-white rounded-lg border border-blue-300 text-blue-900 font-medium">
+                            🔒 <b>下屬考績連動鐵律：</b> 請輸入他手下四位核心成員（出貨同仁、點貨同仁、門市配貨、蝦皮兼倉儲）當週的考績分數：
+                        </div>
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                            <div><label class="font-bold">1. 出貨同仁考績</label><input type="number" id="sub_staff_1" value="82" min="0" max="100" class="w-full p-1 mt-1" oninput="calculateStaffLinkage()"></div>
+                            <div><label class="font-bold">2. 點貨同仁考績</label><input type="number" id="sub_staff_2" value="85" min="0" max="100" class="w-full p-1 mt-1" oninput="calculateStaffLinkage()"></div>
+                            <div><label class="font-bold">3. 配貨同仁考績</label><input type="number" id="sub_staff_3" value="80" min="0" max="100" class="w-full p-1 mt-1" oninput="calculateStaffLinkage()"></div>
+                            <div><label class="font-bold">4. 蝦皮倉儲同仁</label><input type="number" id="sub_staff_4" value="78" min="0" max="100" class="w-full p-1 mt-1" oninput="calculateStaffLinkage()"></div>
+                        </div>
+                        
+                        <div class="p-3 bg-slate-900 text-white rounded-lg grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
+                            <div>
+                                <span class="block text-xs text-slate-400">團隊下屬四人當週平均得分：</span>
+                                <span id="subStaffAvgDisplay" class="text-xl font-black text-teal-400">81.3 分</span>
+                            </div>
+                            <div>
+                                <span class="block text-xs text-slate-400">⚖ shrink 主管連動管理實際得分：</span>
+                                <span id="managerStaffLinkedScore" class="text-xl font-black text-amber-400">15.0 分 / 滿分20</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="ptStaffSection" class="space-y-6" style="display: none;">
+                <div>
+                    <h2 class="section-title text-base mb-2">總部採購 PT 兼職人員週度基本職責考核 (權重 90分)</h2>
+                    <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-4 text-xs">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="font-bold">1. 門市追加單與採購單 KEY 單時效 (最高 30 分)</label>
+                                <input type="number" id="pt_score_1" min="0" max="30" value="26" class="w-full mt-1">
+                            </div>
+                            <div>
+                                <label class="font-bold">2. LINE 群組訊息處理與廠商問題對接 (最高 30 分)</label>
+                                <input type="number" id="pt_score_2" min="0" max="30" value="27" class="w-full mt-1">
+                            </div>
+                            <div>
+                                <label class="font-bold">3. 長週期缺貨核對與主倉數據更新 (最高 30 分)</label>
+                                <input type="number" id="pt_score_3" min="0" max="30" value="25" class="w-full mt-1">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h2 class="section-title text-base mb-2">五、老闆 Rita 綜合主觀評分 (權重 10分 - 依日常效率與學習積極度給分)</h2>
+                <div class="p-4 bg-emerald-50 rounded-xl border border-emerald-200 space-y-3 text-xs">
+                    <p class="text-emerald-800 font-medium">👑 <b>老闆直覺感受分：</b> 10% 由老闆根據該人員當週的工作效率、遭遇卡關時的應變速度、以及學習積極度，全憑感受給分。</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="font-bold text-emerald-900">老闆 Rita 評分 (0 - 10 分)</label>
+                            <input type="number" id="score_boss_feeling" min="0" max="10" value="8.5" step="0.5" class="w-full mt-1">
+                        </div>
+                        <div>
+                            <label class="font-bold text-emerald-900">老闆當週對該同仁之核心短評與激勵期許</label>
+                            <input type="text" id="boss_review_text" value="本週大貨開單流暢，網路銷量有跟上大盤流速，下週持續保持。" class="w-full mt-1">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button type="button" onclick="runZbcsmadeHqKpiCalc()" class="w-full bg-slate-900 text-white font-bold py-4 rounded-xl shadow-lg text-lg transition hover:bg-slate-800">⚡ 執行 Zbcsmade 總部週度考績大師運算</button>
+
+            <div id="resultArea" class="p-6 bg-pink-50 border border-pink-200 rounded-2xl hidden">
+                <h3 class="text-lg font-bold text-pink-900 mb-3 border-b border-pink-200 pb-2">📋 總部核心審查：【<span id="resWeek"></span>】同仁週度考核報告</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div class="text-lg font-black text-pink-900">該同仁最終綜合得分：<span id="finalScore" class="text-3xl text-pink-600">0</span> 分</div>
+                    <div class="text-base font-bold text-pink-900">評定等第：<span id="gradeText" class="text-lg"></span></div>
+                </div>
+                <textarea id="summaryOutput" class="w-full h-96 font-mono background bg-slate-900 text-slate-100 p-4 rounded-xl text-xs leading-relaxed mt-2" readonly></textarea>
+                <button type="button" onclick="copyKpiReport()" class="w-full bg-emerald-600 text-white font-bold py-3 rounded-lg mt-3 hover:bg-emerald-700 transition">📋 一鍵複製結構化考核報告 (發送管理層)</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        window.onload = function() {
+            document.getElementById('evalDate').valueAsDate = new Date();
+            calculateStaffLinkage();
+            calculateSalesVolumeScore();
+        };
+
+        function switchRoleView() {
+            const role = document.getElementById('staffRole').value;
+            if (role === 'bang') {
+                document.getElementById('bangManagerSection').style.display = 'block';
+                document.getElementById('ptStaffSection').style.display = 'none';
+            } else {
+                document.getElementById('bangManagerSection').style.display = 'none';
+                document.getElementById('ptStaffSection').style.display = 'block';
+            }
+            document.getElementById('resultArea').style.display = 'none';
+        }
+
+        // 🔥 全新智慧型上週線上銷量階梯演算法
+        function calculateSalesVolumeScore() {
+            const pieces = parseInt(document.getElementById('last_week_sales_volume').value) || 0;
+            let score = 15.0; // 1400件為標準基準分 = 15分
+
+            if (pieces === 1400) {
+                score = 15.0;
+            } else if (pieces > 1400) {
+                // 每多 100 件 +1 分
+                const extraHundred = Math.floor((pieces - 1400) / 100);
+                score = 15.0 + (extraHundred * 1.0);
+                if (score > 20.0) score = 20.0; // 封頂 20 分
+            } else {
+                // 每少 100 件 -1 分
+                const missingHundred = Math.ceil((1400 - pieces) / 100);
+                score = 15.0 - (missingHundred * 1.0);
+                
+                // 嚴重防卡死安全底線：若低於 900 件 (少於500件以上)，直接強制重扣警告
+                if (pieces < 900) {
+                    if (score > 10.0) score = 9.5;
+                }
+                if (score < 0) score = 0;
+            }
+
+            document.getElementById('salesVolumeScoreDisplay').innerText = score.toFixed(1);
+            return score;
