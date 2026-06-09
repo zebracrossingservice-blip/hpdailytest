@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zbcsmade 總部主管週度考核系統 V5</title>
+    <title>Zbcsmade 總部主管週度考核系統 V6</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { 
@@ -60,7 +60,7 @@
                     <div class="p-3 bg-blue-50 text-blue-900 border border-blue-200 rounded-lg font-medium leading-relaxed">
                         📊 <b>採購流速控貨天條（滿分 25 分）：</b><br>
                         1. 當週 <b>(全通路總出貨銷售件數)</b> 與 <b>(全通路總追加採購件數)</b> 的差額在 <b>正負 100 件內</b>，代表大盤流速極為健康，核發滿分。<br>
-                        2. <b>防呆防卡死</b>：若當週官網預購庫存爆量(>600件)或蝦皮爆量(>1200件)，主管採購時若未扣除爆倉數量，系統將動態自動降分。
+                        2. <b>防呆防卡死</b>：若當週官網預購庫存爆量(>600件)或蝦皮爆量(>1200件)，主管採購時若未扣除爆倉數量，系統將動態自動降分。主管必須同時掌握四間實體門市即時庫存，建立通路的流速概念。
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 border-b border-gray-200 pb-4">
@@ -74,12 +74,19 @@
                         </div>
 
                         <div class="bg-white p-3 rounded-lg border border-gray-200 space-y-2">
-                            <span class="font-bold text-emerald-800 block">🏛️ 2. 實體分店數據 (各店填入後自動加總)：</span>
-                            <div class="grid grid-cols-2 gap-2">
-                                <div><label>南西銷售 (件)</label><input type="number" id="sales_nx" value="350" oninput="runHqCalculations()" class="w-full"></div>
-                                <div><label>中山銷售 (件)</label><input type="number" id="sales_zs" value="280" oninput="runHqCalculations()" class="w-full"></div>
-                                <div><label>中原銷售 (件)</label><input type="number" id="sales_zy" value="120" oninput="runHqCalculations()" class="w-full"></div>
-                                <div><label>新竹銷售 (件)</label><input type="number" id="sales_hc" value="80" oninput="runHqCalculations()" class="w-full"></div>
+                            <span class="font-bold text-emerald-800 block">🏛️ 2. 實體分店數據 (銷量與即時庫存掌控)：</span>
+                            <div class="grid grid-cols-2 gap-x-4 gap-y-2 border-b border-gray-100 pb-2">
+                                <div><label class="font-medium text-slate-600">南西銷售 (件)</label><input type="number" id="sales_nx" value="350" oninput="runHqCalculations()" class="w-full"></div>
+                                <div><label class="font-medium text-emerald-700">南西即時庫存 (件)</label><input type="number" id="stock_nx" value="850" class="w-full border-emerald-200 bg-emerald-50/30"></div>
+                                
+                                <div><label class="font-medium text-slate-600">中山銷售 (件)</label><input type="number" id="sales_zs" value="280" oninput="runHqCalculations()" class="w-full"></div>
+                                <div><label class="font-medium text-emerald-700">中山即時庫存 (件)</label><input type="number" id="stock_zs" value="720" class="w-full border-emerald-200 bg-emerald-50/30"></div>
+                                
+                                <div><label class="font-medium text-slate-600">中原銷售 (件)</label><input type="number" id="sales_zy" value="120" oninput="runHqCalculations()" class="w-full"></div>
+                                <div><label class="font-medium text-emerald-700">中原即時庫存 (件)</label><input type="number" id="stock_zy" value="450" class="w-full border-emerald-200 bg-emerald-50/30"></div>
+                                
+                                <div><label class="font-medium text-slate-600">新竹銷售 (件)</label><input type="number" id="sales_hc" value="80" oninput="runHqCalculations()" class="w-full"></div>
+                                <div><label class="font-medium text-emerald-700">新竹即時庫存 (件)</label><input type="number" id="stock_hc" value="380" class="w-full border-emerald-200 bg-emerald-50/30"></div>
                             </div>
                             <div class="grid grid-cols-2 gap-2 pt-1">
                                 <div><label class="text-emerald-900 font-bold">分店銷量總計(件)</label><input type="number" id="sales_store_total" value="830" readonly class="w-full bg-gray-50 font-bold text-emerald-700"></div>
@@ -275,7 +282,7 @@
                 </div>
             </div>
 
-            <button type="button" onclick="runZbcsmadeHqKpiCalcV5()" class="w-full bg-slate-900 text-white font-black py-4 rounded-xl shadow-lg text-lg transition hover:bg-slate-800">⚡ 執行 Zbcsmade 總部主管 V5 核心管理優化版考核運算</button>
+            <button type="button" onclick="runZbcsmadeHqKpiCalcV6()" class="w-full bg-slate-900 text-white font-black py-4 rounded-xl shadow-lg text-lg transition hover:bg-slate-800">⚡ 執行 Zbcsmade 總部主管 V6 核心管理優化版考核運算</button>
 
             <div id="resultArea" class="p-6 bg-pink-50 border border-pink-200 rounded-2xl hidden shadow-inner">
                 <h3 class="text-lg font-bold text-pink-900 mb-3 border-b border-pink-200 pb-2 flex justify-between items-center">
@@ -295,15 +302,6 @@
     </div>
 
     <script>
-        const storeTargets = {
-            '南西': { month: 5800, base: ((5800 / 4) / 6.55) * 1.05 }, 
-            '中山': { month: 4800, base: ((4800 / 4) / 6.55) * 1.05 }, 
-            '中原': { month: 2200, base: (2200 / 4) / 6.55 },
-            '新竹': { month: 1400, base: (1400 / 4) / 6.55 }
-        };
-        const dayModifiers = [0.45, 0.55, 0.70, 0.70, 1.20, 1.55, 1.40];
-        const weekDayNames = ['一', '二', '三', '四', '五', '六', '日'];
-
         window.onload = function() {
             const today = new Date(); 
             document.getElementById('evalDate').valueAsDate = today;
@@ -418,10 +416,10 @@
             return score;
         }
 
-        // 第四大項：下屬考績均分連動階梯算分 (🔥 核心修改：漏勾回報直接重扣主管大項總分)
+        // 第四大項：下屬考績均分連動階梯算分
         function calculateStaffLinkage() {
             let totalFinalStaffScore = 0;
-            let globalMissingCount = 0; // 全團隊漏勾總回報次數
+            let globalMissingCount = 0; 
             let reportMissingLogs = [];
 
             for (let i = 1; i <= 4; i++) {
@@ -431,8 +429,7 @@
                 let unCheckedCount = 0;
                 chks.forEach(c => { if(!c.checked) unCheckedCount++; });
 
-                globalMissingCount += unCheckedCount; // 累計至全團隊，直接扣主管
-                document.getElementById(`sub_final_${i}`).innerText = baseScore.toFixed(0);
+                globalMissingCount += unCheckedCount; 
                 totalFinalStaffScore += baseScore;
 
                 document.getElementById(`missing_count_txt_${i}`).innerText = `未回報：${unCheckedCount} 項`;
@@ -444,11 +441,9 @@
                 }
             }
 
-            // 下屬純得分均分 (與基礎自評分連動)
             const avg = totalFinalStaffScore / 4;
             document.getElementById('subStaffAvgDisplay').innerText = avg.toFixed(1) + " 分";
 
-            // 初始管理連動分
             let baseManagerScore = 0;
             if (avg < 70) {
                 baseManagerScore = (avg / 70) * 10; 
@@ -461,7 +456,6 @@
             }
             if(baseManagerScore > 20) baseManagerScore = 20;
 
-            // 🔥 核心修改：每少一項未打勾，主管總分直接扣 2 分
             let finalManagerScore = baseManagerScore - (globalMissingCount * 2);
             if (finalManagerScore < 0) finalManagerScore = 0;
 
@@ -475,19 +469,26 @@
             };
         }
 
-        // 核心 V5 計算大會審
-        function runZbcsmadeHqKpiCalcV3() {
-            const currentWeek = document.getElementById('weekSelect').value;
+        // 核心 V6 計算大會審
+        function runZbcsmadeHqKpiCalcPhases(phase) { /* 保留原本版本擴充 */ }
+
+        function runZbcsmadeHqKpiCalcV6() {
             const weekRange = document.getElementById('weekRange').value;
             const limitDateVal = document.getElementById('limitDate').value;
             const evalDateVal = document.getElementById('evalDate').value;
             const bossFeeling = parseFloat(document.getElementById('score_boss_feeling').value) || 0;
             const bossReview = document.getElementById('boss_review_text').value;
 
-            // --- ⏰ 行政填表時效查核大限 ---
+            // 實體門市庫存取得
+            const stNx = document.getElementById('stock_nx').value || '0';
+            const stZs = document.getElementById('stock_zs').value || '0';
+            const stZy = document.getElementById('stock_zy').value || '0';
+            const stHc = document.getElementById('stock_hc').value || '0';
+
+            // --- ⏰ 行政填表時效查核 ---
             let delayDays = 0;
             let delayDeduction = 0;
-            let delayMsg = "✅ 符合次週一前行政填報時效規範";
+            let delayMsg = "✅ 符合次週二前行政填報時效規範";
             if (limitDateVal && evalDateVal) {
                 const limitObj = new Date(limitDateVal);
                 const evalObj = new Date(evalDateVal);
@@ -504,7 +505,6 @@
             const modThreeScore = calculateSalesVolumeScore();
             const modFour = calculateStaffLinkage();
 
-            // 獲取四位下屬的短評文字
             const review1 = document.getElementById('sub_review_1').value;
             const review2 = document.getElementById('sub_review_2').value;
             const review3 = document.getElementById('sub_review_3').value;
@@ -520,14 +520,13 @@
             else if (totalScore >= 75) grade = "B (常態合格，商品流速與延遲單處理仍有精進空間)";
             else if (totalScore >= 70) grade = "C+ (考績警告，存在大店爆倉囤積或下屬績效滑落漏洞)";
 
-            document.getElementById('resWeek').innerText = currentWeek;
             document.getElementById('finalScore').innerText = totalScore.toFixed(1);
             document.getElementById('gradeText').innerText = grade;
             document.getElementById('resultArea').style.display = "block";
 
-            let text = `📦 【Zbcsmade 總部採購暨倉儲主管考核診斷報告 V5 核心管理優化版】 📦\n`;
+            let text = `📦 【Zbcsmade 總部採購暨倉儲主管考核診斷報告 V6 核心管理優化版】 📦\n`;
             text += `👤 被考核人職級：邦邦 (採購兼倉儲主管)  |  👑 成本中心：總部倉儲採購部\n`;
-            text += `📅 考核週期：${currentWeek} (${weekRange})  |  審查會審日期：${evalDateVal || '未填'}\n`;
+            text += `📅 考核週期範圍：(${weekRange})  |  審查會審日期：${evalDateVal || '未填'}\n`;
             text += `⏰ 行政填報時效：${delayMsg}\n`;
             text += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
             text += `🎯 各項管理與大盤營運指標【實得分數換算明細與缺失分析】如下：\n\n`;
@@ -535,7 +534,12 @@
             text += `1️⃣ 大盤採購、追加流速與商品就位管控：${modOne.score.toFixed(1)} 分 / 滿分25\n`;
             text += `   ➔ 換算方式：當週全通路總銷售(${modOne.grandSales}件)減總採購(${modOne.grandPurchase}件)之差額為【${Math.abs(modOne.diff)}件】\n`;
             text += `   ➔ 缺失與水位反查：${modOne.overstockTxt}\n`;
-            text += `   ➔ 綜合評定：${Math.abs(modOne.diff) <= 100 ? '🟢 做的很棒！採銷落差成功壓在100件黃金平衡線內，控貨精準。' : '❌ 需加強！採購追加量與實際門市線上流速發生失衡，請即刻修正追加單。'}\n\n`;
+            text += `   🏛️ [四大實體門市即時庫存盤點自檢紀錄]：\n`;
+            text += `     ▪️ 南西門市庫存： ${stNx} 件\n`;
+            text += `     ▪️ 中山門市庫存： ${stZs} 件\n`;
+            text += `     ▪️ 中原門市庫存： ${stZy} 件\n`;
+            text += `     ▪️ 新竹門市庫存： ${stHc} 件\n`;
+            text += `   ➔ 主管控貨自評：${Math.abs(modOne.diff) <= 100 ? '🟢 做的很棒！採銷落差成功壓在100件黃金平衡線內，控貨精準。' : '❌ 需加強！採購追加量與實際門市線上流速發生失衡，請即刻修正追加單。'}\n\n`;
 
             text += `2️⃣ 邦邦個人核心 11 項業務職責落實度：${modTwo.score.toFixed(1)} 分 / 滿分25\n`;
             text += `   ➔ 換算方式：11項工作為考核天條，每缺一項未完成重扣 2 分。\n`;
