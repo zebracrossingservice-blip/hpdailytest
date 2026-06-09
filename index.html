@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zbcsmade 總部主管週度考核系統 V3 終極完美版</title>
+    <title>Zbcsmade 總部主管週度考核系統 V4</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { 
@@ -139,13 +139,14 @@
                 <h2 class="section-title text-base mb-2 text-rose-800">三、本週業績 (權重 20分 - 春夏銷量階梯核算)</h2>
                 <div class="p-4 bg-rose-50/60 rounded-xl border border-rose-200 space-y-4 text-xs">
                     <div class="p-3 bg-white rounded-lg border border-rose-300 text-rose-950 font-medium">
-                        📈 <b>春夏 Q1-Q2 大盤流速指標：</b> 每週線上目標 <b>70 萬元</b>，換算出貨量標準為 <b>1400 件</b>。<br>
-                        ⚖️ <b>階梯算法</b>：當週達到 1400 件核給 <b>15 分</b>（及格）；<b>每多 100 件 +1 分</b>（上限20分）；<b>每少 100 件 -1 分</b>（低於900件強制歸為10分以下）。
+                        📈 <b>春夏 Q1-Q2 大盤合併流速指標：</b><br>
+                        • <b>官網標準為 1400 件</b> ＋ <b>蝦皮標準為 400 件</b> ➔ 兩大線上通路<b>合併考核標準為 1800 件</b>。<br>
+                        ⚖️ <b>階梯算法</b>：當週達到 1800 件核給 <b>15 分</b>（及格）；<b>每多 100 件 +1 分</b>（上限20分）；<b>每少 100 件 -1 分</b>（低於1300件強制歸為10分以下）。
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="font-bold text-rose-900">📦 請輸入「當週線上官網＋蝦皮」實際總出貨銷售件數：</label>
-                            <input type="number" id="last_week_sales_volume" value="1400" min="0" oninput="calculateSalesVolumeScore()" class="w-full mt-1 font-bold border-rose-300 text-rose-700 text-base">
+                            <input type="number" id="last_week_sales_volume" value="1800" min="0" oninput="calculateSalesVolumeScore()" class="w-full mt-1 font-bold border-rose-300 text-rose-700 text-base">
                         </div>
                         <div>
                             <label class="font-bold text-slate-700 block">📊 系統大盤業績階梯計分結果：</label>
@@ -162,7 +163,7 @@
                 <div class="p-4 bg-blue-50 rounded-xl border border-blue-200 space-y-4 text-xs">
                     <div class="p-3 bg-white rounded-lg border border-blue-300 text-blue-900 font-medium leading-relaxed">
                         🔒 <b>下屬考績連動與回報檢核天條：</b><br>
-                        1. 請輸入四位同仁的「日常表現基礎分」（預設為 90 分滿分自評起點）。<br>
+                        1. 請輸入四位同仁的「日常表現基礎分」 。<br>
                         2. <b>日常回報考核機制</b>：請勾選每位同仁<b>週一至週五的每日回報</b>以及<b>每週大回報</b>。<b>每缺少一次打勾，系統將自動於該同仁考績中重扣 2 分！</b><br>
                         3. 系統自動算出四人扣分後的最終平均考績，並執行嚴格的主管連動階梯算分（下屬均分低於70，主管此大項強制以10分以下核算）。
                     </div>
@@ -279,7 +280,7 @@
                 </div>
             </div>
 
-            <button type="button" onclick="runZbcsmadeHqKpiCalcV3()" class="w-full bg-slate-900 text-white font-black py-4 rounded-xl shadow-lg text-lg transition hover:bg-slate-800">⚡ 執行 Zbcsmade 總部主管 V3 終極整合版考核運算</button>
+            <button type="button" onclick="runZbcsmadeHqKpiCalcV3()" class="w-full bg-slate-900 text-white font-black py-4 rounded-xl shadow-lg text-lg transition hover:bg-slate-800">⚡ 執行 Zbcsmade 總部主管 V4 大盤業績校正版考核運算</button>
 
             <div id="resultArea" class="p-6 bg-pink-50 border border-pink-200 rounded-2xl hidden shadow-inner">
                 <h3 class="text-lg font-bold text-pink-900 mb-3 border-b border-pink-200 pb-2 flex justify-between items-center">
@@ -299,6 +300,15 @@
     </div>
 
     <script>
+        const storeTargets = {
+            '南西': { month: 5800, base: ((5800 / 4) / 6.55) * 1.05 }, 
+            '中山': { month: 4800, base: ((4800 / 4) / 6.55) * 1.05 }, 
+            '中原': { month: 2200, base: (2200 / 4) / 6.55 },
+            '新竹': { month: 1400, base: (1400 / 4) / 6.55 }
+        };
+        const dayModifiers = [0.45, 0.55, 0.70, 0.70, 1.20, 1.55, 1.40];
+        const weekDayNames = ['一', '二', '三', '四', '五', '六', '日'];
+
         window.onload = function() {
             const today = new Date(); 
             document.getElementById('evalDate').valueAsDate = today;
@@ -392,21 +402,23 @@
             };
         }
 
-        // 第三大項：本週線上銷量階梯算分 (滿分20分)
+        // 🔥 第三大項：本週線上銷量階梯算分 (全面更新為 1400+400 = 1800 件合併基準)
         function calculateSalesVolumeScore() {
             const pieces = parseInt(document.getElementById('last_week_sales_volume').value) || 0;
             let score = 15.0; 
 
-            if (pieces === 1400) {
+            if (pieces === 1800) {
                 score = 15.0;
-            } else if (pieces > 1400) {
-                const extraHundred = Math.floor((pieces - 1400) / 100);
+            } else if (pieces > 1800) {
+                // 每多 100 件 +1 分
+                const extraHundred = Math.floor((pieces - 1800) / 100);
                 score = 15.0 + (extraHundred * 1.0);
                 if (score > 20.0) score = 20.0; 
             } else {
-                const missingHundred = Math.ceil((1400 - pieces) / 100);
+                // 每少 100 件 -1 分
+                const missingHundred = Math.ceil((1800 - pieces) / 100);
                 score = 15.0 - (missingHundred * 1.0);
-                if (pieces < 900) { if (score > 10.0) score = 9.0; } 
+                if (pieces < 1300) { if (score > 10.0) score = 9.0; } // 跌破1300件(少於500件以上)強制重扣警告
                 if (score < 0) score = 0;
             }
             document.getElementById('salesVolumeScoreDisplay').innerText = score.toFixed(1);
@@ -418,7 +430,6 @@
             let totalFinalStaffScore = 0;
             let reportMissingLogs = [];
 
-            // 跑四個人員的核查迴圈
             for (let i = 1; i <= 4; i++) {
                 const baseScore = parseFloat(document.getElementById(`sub_base_${i}`).value) || 0;
                 const chks = document.querySelectorAll(`.report-chk-${i}`);
@@ -434,7 +445,7 @@
                 totalFinalStaffScore += finalStaffScore;
 
                 if (unCheckedCount > 0) {
-                    reportMissingLogs.push(`同仁 ${i} 缺漏回報次數 ${unCheckedCount} 次(重扣 ${unCheckedCount * 2} 分)`);
+                    reportMissingLogs.push(`同仁 ${i} 缺漏回報 ${unCheckedCount} 次(扣 ${unCheckedCount * 2} 分)`);
                 }
             }
 
@@ -464,6 +475,7 @@
 
         // 核心 V3 終極計算大會審
         function runZbcsmadeHqKpiCalcV3() {
+            const currentWeek = document.getElementById('weekSelect').value;
             const weekRange = document.getElementById('weekRange').value;
             const limitDateVal = document.getElementById('limitDate').value;
             const evalDateVal = document.getElementById('evalDate').value;
@@ -473,7 +485,7 @@
             // --- ⏰ 行政填表時效查核大限 ---
             let delayDays = 0;
             let delayDeduction = 0;
-            let delayMsg = "✅ 符合次週二前行政填報時效規範";
+            let delayMsg = "✅ 符合次週一前行政填報時效規範";
             if (limitDateVal && evalDateVal) {
                 const limitObj = new Date(limitDateVal);
                 const evalObj = new Date(evalDateVal);
@@ -485,13 +497,11 @@
                 }
             }
 
-            // 呼叫各模組進行大數據抓取
             const modOne = runHqCalculations();
             const modTwo = updateProgress();
             const modThreeScore = calculateSalesVolumeScore();
             const modFour = calculateStaffLinkage();
 
-            // 綜合總分匯總
             let totalScore = modOne.score + modTwo.score + modThreeScore + modFour.score + bossFeeling - delayDeduction;
             if (totalScore > 100) totalScore = 100;
             if (totalScore < 0) totalScore = 0;
@@ -502,16 +512,14 @@
             else if (totalScore >= 75) grade = "B (常態合格，商品流速與延遲單處理仍有精進空間)";
             else if (totalScore >= 70) grade = "C+ (考績警告，存在大店爆倉囤積或下屬績效滑落漏洞)";
 
-            // 顯示診斷框
-            document.getElementById('resWeek').innerText = weekRange;
+            document.getElementById('resWeek').innerText = currentWeek;
             document.getElementById('finalScore').innerText = totalScore.toFixed(1);
             document.getElementById('gradeText').innerText = grade;
             document.getElementById('resultArea').style.display = "block";
 
-            // 智慧型結構化考績分析診斷報告文本生成
-            let text = `📦 【Zbcsmade 總部採購暨倉儲主管考核診斷報告 V3 終極整合版】 📦\n`;
+            let text = `📦 【Zbcsmade 總部採購暨倉儲主管考核診斷報告 V4 大盤業績校正版】 📦\n`;
             text += `👤 被考核人職級：邦邦 (採購兼倉儲主管)  |  👑 成本中心：總部倉儲採購部\n`;
-            text += `📅 考核週期：${weekRange}  |  審查會審日期：${evalDateVal || '未填'}\n`;
+            text += `📅 考核週期：${currentWeek} (${weekRange})  |  審查會審日期：${evalDateVal || '未填'}\n`;
             text += `⏰ 行政填報時效：${delayMsg}\n`;
             text += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
             text += `🎯 各項管理與大盤營運指標【實得分數換算明細與缺失分析】如下：\n\n`;
@@ -523,17 +531,17 @@
 
             text += `2️⃣ 邦邦個人核心 11 項業務職責落實度：${modTwo.score.toFixed(1)} 分 / 滿分25\n`;
             text += `   ➔ 換算方式：11項工作為考核天條，每缺一項未完成重扣 2 分。\n`;
-            text += `   ➔ 綜合評定：${modTwo.missCount === 0 ? '🟢 做的很棒！11項核心開單、打版、14天/28天未出貨長週期追蹤皆如期全數通關。' : `❌ 需加強！本週有 ${modTwo.missCount} 項核心職責延誤或漏失，管理出現盲區。`}\n\n`;
+            text += `   ➔ 綜合評定：${modTwo.missCount === 0 ? '🟢 做的很棒！11項核心開單、打版、14天/28天未出貨長週期追蹤皆如期全數通關。' : `❌ 需加強！本週有 ${modTwo.missCount} 項核心職責延誤 or 漏失，管理出現盲區。`}\n\n`;
 
             text += `3️⃣ 本週線上通路（官網＋蝦皮）銷售業績：${modThreeScore.toFixed(1)} 分 / 滿分20\n`;
-            text += `   ➔ 換算方式：春夏每週70萬(1400件)為標準及格分15分。每增減100件即浮動加減1分。\n`;
-            text += `   ➔ 銷量數據：當週線上申報出貨總量為【${document.getElementById('last_week_sales_volume').value}】件\n`;
+            text += `   ➔ 換算方式：春夏合併指標(官網1400+蝦皮400 = 1800件)為標準及格分15分。每增減100件即浮動加減1分。\n`;
+            text += `   ➔ 銷量數據：當週線上出貨總量為【${document.getElementById('last_week_sales_volume').value}】件\n`;
             text += `   ➔ 綜合評定：${modThreeScore >= 15 ? '🟢 做的不錯！線上流速有成功跟隨大盤春夏設定之目標前進。' : '❌ 需加強！上週線上銷量跌破流速目標，請即刻協同前端行銷拉高爆款到貨率與去留。'}\n\n`;
 
             text += `4️⃣ 倉儲團隊人員管控與下屬績效連動：${modFour.score.toFixed(1)} 分 / 滿分20\n`;
-            text += `   ➔ 換算方式：考量下屬回報缺失扣分。四位同仁均分連動。低於70分主管此項直接腰斬10分以下。\n`;
+            text += `   ➔ 換算方式：考量下屬日報/週回報漏報扣分。四位同仁均分連動。低於70分主管此項直接腰斬10分以下。\n`;
             text += `   ➔ 下屬績效回報查核：${modFour.missingTxt}\n`;
-            text += `   ➔ 團隊最终平均得分為：【${modFour.avg.toFixed(1)}】分\n`;
+            text += `   ➔ 團隊最終平均得分為：【${modFour.avg.toFixed(1)}】分\n`;
             text += `   ➔ 綜合評定：${modFour.avg >= 85 ? '🟢 做的很棒！下屬各人員回報與常態任務調配有效率，成功帶動整體團隊產出。' : '❌ 需加強！下屬團隊存在日報漏報或考績滑落，主管應強化下午交接及晨會進度盯防。'}\n\n`;
 
             text += `5️⃣ 老闆綜合感受評分 (日常效率與積極度)：${bossFeeling.toFixed(1)} 分 / 滿分10\n`;
