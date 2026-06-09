@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zbcsmade 總部主管週度考核系統 V4</title>
+    <title>Zbcsmade 總部主管週度考核系統 V5</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { 
@@ -159,27 +159,24 @@
             </div>
 
             <div>
-                <h2 class="section-title text-base mb-2">四、倉儲團隊人員管控與下屬績效連動考核 (權重 20分)</h2>
+                <h2 class="section-title text-base mb-2">四、倉儲團隊人員管控與下屬績效連動考核 (權重 20分 - 漏回報直接扣主管總分)</h2>
                 <div class="p-4 bg-blue-50 rounded-xl border border-blue-200 space-y-4 text-xs">
                     <div class="p-3 bg-white rounded-lg border border-blue-300 text-blue-900 font-medium leading-relaxed">
-                        🔒 <b>下屬考績連動與回報檢核天條：</b><br>
-                        1. 請輸入四位同仁的「日常表現基礎分」 。<br>
-                        2. <b>日常回報考核機制</b>：請勾選每位同仁<b>週一至週五的每日回報</b>以及<b>每週大回報</b>。<b>每缺少一次打勾，系統將自動於該同仁考績中重扣 2 分！</b><br>
-                        3. 系統自動算出四人扣分後的最終平均考績，並執行嚴格的主管連動階梯算分（下屬均分低於70，主管此大項強制以10分以下核算）。
+                        🔒 <b>最新權責加強算分天條（滿分 20 分）：</b><br>
+                        1. 請輸入四位成員當週由各自評表核算出的「最終基本考績分」，系統會自動計算團隊平均分，作為主管本項的初始得分起點。<br>
+                        2. <b>🔥 主管連動重懲防線：</b>請核對每人週一至週五的每日回報與週度一次大回報。<b>下屬只要少勾選、缺漏或未完成任一項目，系統將直接從主管（邦邦）本大項的 20分 總分中「每一項強制扣除 2 分」！</b>
                     </div>
                     
                     <div class="space-y-3">
                         <div class="bg-white p-3 rounded-xl border border-blue-200">
-                            <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2 mb-2">
-                                <div class="flex items-center gap-2">
-                                    <span class="font-bold text-blue-900 text-sm">👤 1. 出貨同仁考績設定</span>
-                                    <span class="text-gray-400">|</span>
-                                    <label class="font-medium">基礎分：</label>
-                                    <input type="number" id="sub_base_1" value="95" min="0" max="100" class="w-16 p-1 border-gray-300 text-center" oninput="calculateStaffLinkage()">
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 items-center mb-2">
+                                <div class="flex items-center gap-1">
+                                    <span class="font-bold text-blue-900 text-sm">👤 1. 出貨同仁考績分</span>
+                                    <input type="number" id="sub_base_1" value="85" min="0" max="100" class="w-16 p-1 border-gray-300 text-center" oninput="calculateStaffLinkage()">
                                 </div>
-                                <div class="text-right font-bold text-slate-700">該員扣分後實得：<span id="sub_final_1" class="text-blue-600">95</span> 分</div>
+                                <span class="text-xs text-slate-500 text-center sm:text-left font-bold" id="missing_count_txt_1">未回報：0 項</span>
                             </div>
-                            <div class="grid grid-cols-3 sm:grid-cols-6 gap-2 bg-slate-50 p-2 rounded-lg text-center">
+                            <div class="grid grid-cols-3 sm:grid-cols-6 gap-2 bg-slate-50 p-2 rounded-lg text-center mb-2">
                                 <label class="flex items-center justify-center gap-1 bg-white p-1 rounded border"><input type="checkbox" class="report-chk-1" checked onchange="calculateStaffLinkage()">一回報</label>
                                 <label class="flex items-center justify-center gap-1 bg-white p-1 rounded border"><input type="checkbox" class="report-chk-1" checked onchange="calculateStaffLinkage()">二回報</label>
                                 <label class="flex items-center justify-center gap-1 bg-white p-1 rounded border"><input type="checkbox" class="report-chk-1" checked onchange="calculateStaffLinkage()">三回報</label>
@@ -187,19 +184,18 @@
                                 <label class="flex items-center justify-center gap-1 bg-white p-1 rounded border"><input type="checkbox" class="report-chk-1" checked onchange="calculateStaffLinkage()">五回報</label>
                                 <label class="flex items-center justify-center gap-1 bg-amber-50 p-1 rounded border border-amber-200 font-bold text-amber-900"><input type="checkbox" class="report-chk-1" checked onchange="calculateStaffLinkage()">週大回報</label>
                             </div>
+                            <input type="text" id="sub_review_1" value="該員每日出貨進度穩定，當週大回報數據準確無誤。" placeholder="✍️ 主管對【出貨同仁】本週管理短評與優化建議" class="w-full p-2 text-xs bg-gray-50 border-gray-200">
                         </div>
 
                         <div class="bg-white p-3 rounded-xl border border-blue-200">
-                            <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2 mb-2">
-                                <div class="flex items-center gap-2">
-                                    <span class="font-bold text-blue-900 text-sm">👤 2. 點貨同仁考績設定</span>
-                                    <span class="text-gray-400">|</span>
-                                    <label class="font-medium">基礎分：</label>
-                                    <input type="number" id="sub_base_2" value="95" min="0" max="100" class="w-16 p-1 border-gray-300 text-center" oninput="calculateStaffLinkage()">
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 items-center mb-2">
+                                <div class="flex items-center gap-1">
+                                    <span class="font-bold text-blue-900 text-sm">👤 2. 點貨同仁考績分</span>
+                                    <input type="number" id="sub_base_2" value="82" min="0" max="100" class="w-16 p-1 border-gray-300 text-center" oninput="calculateStaffLinkage()">
                                 </div>
-                                <div class="text-right font-bold text-slate-700">該員扣分後實得：<span id="sub_final_2" class="text-blue-600">95</span> 分</div>
+                                <span class="text-xs text-slate-500 text-center sm:text-left font-bold" id="missing_count_txt_2">未回報：0 項</span>
                             </div>
-                            <div class="grid grid-cols-3 sm:grid-cols-6 gap-2 bg-slate-50 p-2 rounded-lg text-center">
+                            <div class="grid grid-cols-3 sm:grid-cols-6 gap-2 bg-slate-50 p-2 rounded-lg text-center mb-2">
                                 <label class="flex items-center justify-center gap-1 bg-white p-1 rounded border"><input type="checkbox" class="report-chk-2" checked onchange="calculateStaffLinkage()">一回報</label>
                                 <label class="flex items-center justify-center gap-1 bg-white p-1 rounded border"><input type="checkbox" class="report-chk-2" checked onchange="calculateStaffLinkage()">二回報</label>
                                 <label class="flex items-center justify-center gap-1 bg-white p-1 rounded border"><input type="checkbox" class="report-chk-2" checked onchange="calculateStaffLinkage()">三回報</label>
@@ -207,19 +203,18 @@
                                 <label class="flex items-center justify-center gap-1 bg-white p-1 rounded border"><input type="checkbox" class="report-chk-2" checked onchange="calculateStaffLinkage()">五回報</label>
                                 <label class="flex items-center justify-center gap-1 bg-amber-50 p-1 rounded border border-amber-200 font-bold text-amber-900"><input type="checkbox" class="report-chk-2" checked onchange="calculateStaffLinkage()">週大回報</label>
                             </div>
+                            <input type="text" id="sub_review_2" value="到貨拆包點交速度理想，倉庫盲區灰塵清理需再加強。" placeholder="✍️ 主管對【點貨同仁】本週管理短評與優化建議" class="w-full p-2 text-xs bg-gray-50 border-gray-200">
                         </div>
 
                         <div class="bg-white p-3 rounded-xl border border-blue-200">
-                            <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2 mb-2">
-                                <div class="flex items-center gap-2">
-                                    <span class="font-bold text-blue-900 text-sm">👤 3. 配貨同仁考績設定</span>
-                                    <span class="text-gray-400">|</span>
-                                    <label class="font-medium">基礎分：</label>
-                                    <input type="number" id="sub_base_3" value="92" min="0" max="100" class="w-16 p-1 border-gray-300 text-center" oninput="calculateStaffLinkage()">
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 items-center mb-2">
+                                <div class="flex items-center gap-1">
+                                    <span class="font-bold text-blue-900 text-sm">👤 3. 配貨同仁考績分</span>
+                                    <input type="number" id="sub_base_3" value="88" min="0" max="100" class="w-16 p-1 border-gray-300 text-center" oninput="calculateStaffLinkage()">
                                 </div>
-                                <div class="text-right font-bold text-slate-700">該員扣分後實得：<span id="sub_final_3" class="text-blue-600">92</span> 分</div>
+                                <span class="text-xs text-slate-500 text-center sm:text-left font-bold" id="missing_count_txt_3">未回報：0 項</span>
                             </div>
-                            <div class="grid grid-cols-3 sm:grid-cols-6 gap-2 bg-slate-50 p-2 rounded-lg text-center">
+                            <div class="grid grid-cols-3 sm:grid-cols-6 gap-2 bg-slate-50 p-2 rounded-lg text-center mb-2">
                                 <label class="flex items-center justify-center gap-1 bg-white p-1 rounded border"><input type="checkbox" class="report-chk-3" checked onchange="calculateStaffLinkage()">一回報</label>
                                 <label class="flex items-center justify-center gap-1 bg-white p-1 rounded border"><input type="checkbox" class="report-chk-3" checked onchange="calculateStaffLinkage()">二回報</label>
                                 <label class="flex items-center justify-center gap-1 bg-white p-1 rounded border"><input type="checkbox" class="report-chk-3" checked onchange="calculateStaffLinkage()">三回報</label>
@@ -227,19 +222,18 @@
                                 <label class="flex items-center justify-center gap-1 bg-white p-1 rounded border"><input type="checkbox" class="report-chk-3" checked onchange="calculateStaffLinkage()">五回報</label>
                                 <label class="flex items-center justify-center gap-1 bg-amber-50 p-1 rounded border border-amber-200 font-bold text-amber-900"><input type="checkbox" class="report-chk-3" checked onchange="calculateStaffLinkage()">週大回報</label>
                             </div>
+                            <input type="text" id="sub_review_3" value="每週二各門市分貨配貨數據精準，配發速度符合常態標準。" placeholder="✍️ 主管對【配貨同仁】本週管理短評與優化建議" class="w-full p-2 text-xs bg-gray-50 border-gray-200">
                         </div>
 
                         <div class="bg-white p-3 rounded-xl border border-blue-200">
-                            <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2 mb-2">
-                                <div class="flex items-center gap-2">
-                                    <span class="font-bold text-blue-900 text-sm">👤 4. 蝦皮倉儲同仁考績設定</span>
-                                    <span class="text-gray-400">|</span>
-                                    <label class="font-medium">基礎分：</label>
-                                    <input type="number" id="sub_base_4" value="90" min="0" max="100" class="w-16 p-1 border-gray-300 text-center" oninput="calculateStaffLinkage()">
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 items-center mb-2">
+                                <div class="flex items-center gap-1">
+                                    <span class="font-bold text-blue-900 text-sm">👤 4. 蝦皮倉儲同仁分</span>
+                                    <input type="number" id="sub_base_4" value="80" min="0" max="100" class="w-16 p-1 border-gray-300 text-center" oninput="calculateStaffLinkage()">
                                 </div>
-                                <div class="text-right font-bold text-slate-700">該員扣分後實得：<span id="sub_final_4" class="text-blue-600">90</span> 分</div>
+                                <span class="text-xs text-slate-500 text-center sm:text-left font-bold" id="missing_count_txt_4">未回報：0 項</span>
                             </div>
-                            <div class="grid grid-cols-3 sm:grid-cols-6 gap-2 bg-slate-50 p-2 rounded-lg text-center">
+                            <div class="grid grid-cols-3 sm:grid-cols-6 gap-2 bg-slate-50 p-2 rounded-lg text-center mb-2">
                                 <label class="flex items-center justify-center gap-1 bg-white p-1 rounded border"><input type="checkbox" class="report-chk-4" checked onchange="calculateStaffLinkage()">一回報</label>
                                 <label class="flex items-center justify-center gap-1 bg-white p-1 rounded border"><input type="checkbox" class="report-chk-4" checked onchange="calculateStaffLinkage()">二回報</label>
                                 <label class="flex items-center justify-center gap-1 bg-white p-1 rounded border"><input type="checkbox" class="report-chk-4" checked onchange="calculateStaffLinkage()">三回報</label>
@@ -247,17 +241,18 @@
                                 <label class="flex items-center justify-center gap-1 bg-white p-1 rounded border"><input type="checkbox" class="report-chk-4" checked onchange="calculateStaffLinkage()">五回報</label>
                                 <label class="flex items-center justify-center gap-1 bg-amber-50 p-1 rounded border border-amber-200 font-bold text-amber-900"><input type="checkbox" class="report-chk-4" checked onchange="calculateStaffLinkage()">週大回報</label>
                             </div>
+                            <input type="text" id="sub_review_4" value="日常蝦皮庫存有配合控制在1200件內。部分出貨取消單更正時效需再拉快。" placeholder="✍️ 主管對【蝦皮倉儲】本週管理短評與優化建議" class="w-full p-2 text-xs bg-gray-50 border-gray-200">
                         </div>
                     </div>
                     
                     <div class="p-3 bg-slate-900 text-white rounded-lg grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
                         <div>
-                            <span class="block text-xs text-slate-400">下屬團隊（含扣除未回報罰分）當週平均得分：</span>
-                            <span id="subStaffAvgDisplay" class="text-teal-400 font-black text-sm">93.0 分</span>
+                            <span class="block text-xs text-slate-400">下屬團隊最終考績平均得分：</span>
+                            <span id="subStaffAvgDisplay" class="text-teal-400 font-black text-sm">83.8 分</span>
                         </div>
                         <div>
-                            <span class="block text-xs text-slate-400">⚖️ 系統智慧連動判定邦邦管理得分：</span>
-                            <span id="managerStaffLinkedScore" class="text-amber-400 text-sm font-black">18.5 分 / 滿分20</span>
+                            <span class="block text-xs text-slate-400">⚖️ 團隊管控與回報防線考核（邦邦實得管理分）：</span>
+                            <span id="managerStaffLinkedScore" class="text-amber-400 text-sm font-black">15.0 分 / 滿分20</span>
                         </div>
                     </div>
                 </div>
@@ -280,7 +275,7 @@
                 </div>
             </div>
 
-            <button type="button" onclick="runZbcsmadeHqKpiCalcV3()" class="w-full bg-slate-900 text-white font-black py-4 rounded-xl shadow-lg text-lg transition hover:bg-slate-800">⚡ 執行 Zbcsmade 總部主管 V4 大盤業績校正版考核運算</button>
+            <button type="button" onclick="runZbcsmadeHqKpiCalcV5()" class="w-full bg-slate-900 text-white font-black py-4 rounded-xl shadow-lg text-lg transition hover:bg-slate-800">⚡ 執行 Zbcsmade 總部主管 V5 核心管理優化版考核運算</button>
 
             <div id="resultArea" class="p-6 bg-pink-50 border border-pink-200 rounded-2xl hidden shadow-inner">
                 <h3 class="text-lg font-bold text-pink-900 mb-3 border-b border-pink-200 pb-2 flex justify-between items-center">
@@ -350,7 +345,7 @@
             let overstockMsg = "";
             let stockDeduction = 0;
 
-            if (offStock > 600) { isOverstocked = true; overstockMsg += "[官網預購可用庫存超標] "; stockDeduction += 3.5; }
+            if (offStock > 600) { isOverstocked = true; overstockMsg += "[官網預購庫存超標] "; stockDeduction += 3.5; }
             if (shopeeStock > 1200) { isOverstocked = true; overstockMsg += "[蝦皮現貨庫存超標] "; stockDeduction += 3.5; }
 
             let baseScoreOne = 25.0;
@@ -402,7 +397,7 @@
             };
         }
 
-        // 🔥 第三大項：本週線上銷量階梯算分 (全面更新為 1400+400 = 1800 件合併基準)
+        // 第三大項：本週線上銷量階梯算分 (1800件合併基準)
         function calculateSalesVolumeScore() {
             const pieces = parseInt(document.getElementById('last_week_sales_volume').value) || 0;
             let score = 15.0; 
@@ -410,24 +405,23 @@
             if (pieces === 1800) {
                 score = 15.0;
             } else if (pieces > 1800) {
-                // 每多 100 件 +1 分
                 const extraHundred = Math.floor((pieces - 1800) / 100);
                 score = 15.0 + (extraHundred * 1.0);
                 if (score > 20.0) score = 20.0; 
             } else {
-                // 每少 100 件 -1 分
                 const missingHundred = Math.ceil((1800 - pieces) / 100);
                 score = 15.0 - (missingHundred * 1.0);
-                if (pieces < 1300) { if (score > 10.0) score = 9.0; } // 跌破1300件(少於500件以上)強制重扣警告
+                if (pieces < 1300) { if (score > 10.0) score = 9.0; } 
                 if (score < 0) score = 0;
             }
             document.getElementById('salesVolumeScoreDisplay').innerText = score.toFixed(1);
             return score;
         }
 
-        // 第四大項：下屬考績均分連動階梯算分 (新增回報漏報扣分邏輯)
+        // 第四大項：下屬考績均分連動階梯算分 (🔥 核心修改：漏勾回報直接重扣主管大項總分)
         function calculateStaffLinkage() {
             let totalFinalStaffScore = 0;
+            let globalMissingCount = 0; // 全團隊漏勾總回報次數
             let reportMissingLogs = [];
 
             for (let i = 1; i <= 4; i++) {
@@ -437,43 +431,51 @@
                 let unCheckedCount = 0;
                 chks.forEach(c => { if(!c.checked) unCheckedCount++; });
 
-                // 每少一項扣 2 分
-                let finalStaffScore = baseScore - (unCheckedCount * 2);
-                if (finalStaffScore < 0) finalStaffScore = 0;
+                globalMissingCount += unCheckedCount; // 累計至全團隊，直接扣主管
+                document.getElementById(`sub_final_${i}`).innerText = baseScore.toFixed(0);
+                totalFinalStaffScore += baseScore;
 
-                document.getElementById(`sub_final_${i}`).innerText = finalStaffScore;
-                totalFinalStaffScore += finalStaffScore;
-
+                document.getElementById(`missing_count_txt_${i}`).innerText = `未回報：${unCheckedCount} 項`;
                 if (unCheckedCount > 0) {
-                    reportMissingLogs.push(`同仁 ${i} 缺漏回報 ${unCheckedCount} 次(扣 ${unCheckedCount * 2} 分)`);
+                    document.getElementById(`missing_count_txt_${i}`).className = "text-xs font-bold text-red-600";
+                    reportMissingLogs.push(`成員 ${i} 漏報 ${unCheckedCount} 次`);
+                } else {
+                    document.getElementById(`missing_count_txt_${i}`).className = "text-xs font-bold text-green-600";
                 }
             }
 
+            // 下屬純得分均分 (與基礎自評分連動)
             const avg = totalFinalStaffScore / 4;
             document.getElementById('subStaffAvgDisplay').innerText = avg.toFixed(1) + " 分";
 
-            let linkedScore = 0;
+            // 初始管理連動分
+            let baseManagerScore = 0;
             if (avg < 70) {
-                linkedScore = (avg / 70) * 10; 
+                baseManagerScore = (avg / 70) * 10; 
             } else if (avg >= 70 && avg < 80) {
-                linkedScore = 12.0;            
+                baseManagerScore = 12.0;            
             } else if (avg >= 80 && avg < 90) {
-                linkedScore = 15.0 + ((avg - 80) / 10) * 3;
+                baseManagerScore = 15.0 + ((avg - 80) / 10) * 3;
             } else {
-                linkedScore = 18.0 + ((avg - 90) / 10) * 2;
+                baseManagerScore = 18.0 + ((avg - 90) / 10) * 2;
             }
+            if(baseManagerScore > 20) baseManagerScore = 20;
 
-            if(linkedScore > 20) linkedScore = 20;
-            document.getElementById('managerStaffLinkedScore').innerText = linkedScore.toFixed(1) + " 分 / 滿分20";
+            // 🔥 核心修改：每少一項未打勾，主管總分直接扣 2 分
+            let finalManagerScore = baseManagerScore - (globalMissingCount * 2);
+            if (finalManagerScore < 0) finalManagerScore = 0;
+
+            document.getElementById('managerStaffLinkedScore').innerText = finalManagerScore.toFixed(1) + " 分 / 滿分20";
             
             return {
                 avg: avg,
-                score: linkedScore,
-                missingTxt: reportMissingLogs.length > 0 ? reportMissingLogs.join('；') : '✅下屬各同仁日報與週回報均落實到位'
+                score: finalManagerScore,
+                globalMiss: globalMissingCount,
+                missingTxt: reportMissingLogs.length > 0 ? `⚠️ 下屬合計發生 ${globalMissingCount} 次漏回報（已直接重扣主管 -${globalMissingCount * 2} 分）：` + reportMissingLogs.join('；') : '✅ 下屬全員出勤回報及週大回報均完美做到'
             };
         }
 
-        // 核心 V3 終極計算大會審
+        // 核心 V5 計算大會審
         function runZbcsmadeHqKpiCalcV3() {
             const currentWeek = document.getElementById('weekSelect').value;
             const weekRange = document.getElementById('weekRange').value;
@@ -502,6 +504,12 @@
             const modThreeScore = calculateSalesVolumeScore();
             const modFour = calculateStaffLinkage();
 
+            // 獲取四位下屬的短評文字
+            const review1 = document.getElementById('sub_review_1').value;
+            const review2 = document.getElementById('sub_review_2').value;
+            const review3 = document.getElementById('sub_review_3').value;
+            const review4 = document.getElementById('sub_review_4').value;
+
             let totalScore = modOne.score + modTwo.score + modThreeScore + modFour.score + bossFeeling - delayDeduction;
             if (totalScore > 100) totalScore = 100;
             if (totalScore < 0) totalScore = 0;
@@ -517,7 +525,7 @@
             document.getElementById('gradeText').innerText = grade;
             document.getElementById('resultArea').style.display = "block";
 
-            let text = `📦 【Zbcsmade 總部採購暨倉儲主管考核診斷報告 V4 大盤業績校正版】 📦\n`;
+            let text = `📦 【Zbcsmade 總部採購暨倉儲主管考核診斷報告 V5 核心管理優化版】 📦\n`;
             text += `👤 被考核人職級：邦邦 (採購兼倉儲主管)  |  👑 成本中心：總部倉儲採購部\n`;
             text += `📅 考核週期：${currentWeek} (${weekRange})  |  審查會審日期：${evalDateVal || '未填'}\n`;
             text += `⏰ 行政填報時效：${delayMsg}\n`;
@@ -539,15 +547,20 @@
             text += `   ➔ 綜合評定：${modThreeScore >= 15 ? '🟢 做的不錯！線上流速有成功跟隨大盤春夏設定之目標前進。' : '❌ 需加強！上週線上銷量跌破流速目標，請即刻協同前端行銷拉高爆款到貨率與去留。'}\n\n`;
 
             text += `4️⃣ 倉儲團隊人員管控與下屬績效連動：${modFour.score.toFixed(1)} 分 / 滿分20\n`;
-            text += `   ➔ 換算方式：考量下屬日報/週回報漏報扣分。四位同仁均分連動。低於70分主管此項直接腰斬10分以下。\n`;
-            text += `   ➔ 下屬績效回報查核：${modFour.missingTxt}\n`;
-            text += `   ➔ 團隊最終平均得分為：【${modFour.avg.toFixed(1)}】分\n`;
-            text += `   ➔ 綜合評定：${modFour.avg >= 85 ? '🟢 做的很棒！下屬各人員回報與常態任務調配有效率，成功帶動整體團隊產出。' : '❌ 需加強！下屬團隊存在日報漏報或考績滑落，主管應強化下午交接及晨會進度盯防。'}\n\n`;
+            text += `   ➔ 換算方式：依據下屬基礎分均分。🔥重大天條：下屬凡有缺漏回報，每項缺失直接重扣主管總分 2 分！\n`;
+            text += `   ➔ 下屬回報漏報查核：${modFour.missingTxt}\n`;
+            text += `   ➔ 下屬基礎平均考績分為：【${modFour.avg.toFixed(1)}】分\n`;
+            text += `   ✍️ 主管對下屬各同仁之【每週管理短評備註】：\n`;
+            text += `     ▪️ [出貨同仁短評]：${review1 || '未填寫'}\n`;
+            text += `     ▪️ [點貨同仁短評]：${review2 || '未填寫'}\n`;
+            text += `     ▪️ [配貨同仁短評]：${review3 || '未填寫'}\n`;
+            text += `     ▪️ [蝦皮倉儲短評]：${review4 || '未填寫'}\n`;
+            text += `   ➔ 綜合評定：${modFour.globalMiss === 0 ? '🟢 做的很棒！下屬各同仁回報全數到位，團隊紀律強悍。' : `❌ 需加強！本週團隊發生 ${modFour.globalMiss} 次回報缺失，導致主管總分直接被扣減 ${modFour.globalMiss * 2} 分，請即刻強化日常查核！`}\n\n`;
 
             text += `5️⃣ 老闆綜合感受評分 (日常效率與積極度)：${bossFeeling.toFixed(1)} 分 / 滿分10\n`;
             text += `   ➔ ✍️ 老闆當週大方向激勵短評：「 ${bossReview} 」\n`;
             text += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
-            text += `🎯 當週核心綜合最終總得分：${totalScore.toFixed(1)} 分 ➔ 最終考績評定等第：${grade}\n`;
+            text += `🎯 當週個人核心最終總得分：${totalScore.toFixed(1)} 分 ➔ 最終考績評定等第：${grade}\n`;
             text += `💡 [負責人審查提示]：分數與數據將直接存檔，作為總部成本中心高階主管之營運季度提報依據。`;
 
             document.getElementById('summaryOutput').value = text;
